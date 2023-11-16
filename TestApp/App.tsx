@@ -57,18 +57,83 @@ function Section({children, title}: SectionProps): JSX.Element {
 }
 
 function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  const customHtml = `
-    <html>
-      <body>
-        <hr>test</hr>
-      </body>
-    </html>
+  const customHTML = `
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css">
+      <script src="https://cdn.form.io/js/formio.embed.js"></script>
+    </head>
+    <body>
+      <div id="formio"></div>
+      <script>
+        Formio.createForm(document.getElementById('formio'), {
+          components: [
+            {
+              type: 'textfield',
+              key: 'firstName',
+              label: 'First Name',
+              placeholder: 'Enter your first name.',
+              input: true,
+              tooltip: 'Enter your <strong>First Name</strong>',
+              description: 'Enter your <strong>First Name</strong>'
+            },
+            {
+              type: 'textfield',
+              key: 'lastName',
+              label: 'Last Name',
+              placeholder: 'Enter your last name',
+              input: true,
+              tooltip: 'Enter your <strong>Last Name</strong>',
+              description: 'Enter your <strong>Last Name</strong>'
+            },
+            {
+              type: "select",
+              label: "Favorite Things",
+              key: "favoriteThings",
+              placeholder: "These are a few of your favorite things...",
+              data: {
+                values: [
+                  {
+                    value: "raindropsOnRoses",
+                    label: "Raindrops on roses"
+                  },
+                  {
+                    value: "whiskersOnKittens",
+                    label: "Whiskers on Kittens"
+                  },
+                  {
+                    value: "brightCopperKettles",
+                    label: "Bright Copper Kettles"
+                  },
+                  {
+                    value: "warmWoolenMittens",
+                    label: "Warm Woolen Mittens"
+                  }
+                ]
+              },
+              dataSrc: "values",
+              template: "<span>{{ item.label }}</span>",
+              multiple: true,
+              input: true
+            },
+            {
+              type: 'button',
+              action: 'submit',
+              label: 'Submit',
+              theme: 'primary'
+            }
+          ]
+        }).then(function(form) {
+          form.on('submit', function(submission) {
+            console.log(submission);
+          });
+        });
+      </script>
+    </body>
+  </html>
   `;
 
   return (
@@ -76,7 +141,7 @@ function App(): JSX.Element {
       <View style={{flex: 2}}>
         <WebView
           source={{
-            html: customHtml,
+            html: customHTML,
           }}
           style={{
             marginTop: 20,
